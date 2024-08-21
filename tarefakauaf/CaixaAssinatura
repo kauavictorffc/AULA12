@@ -1,0 +1,80 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+class Item {
+    String nome;
+    double preco;
+
+    public Item(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " (R$ " + preco + ")";
+    }
+}
+
+class CaixaAssinatura {
+    List<Item> itens = new ArrayList<>();
+    double valorTotal = 0;
+
+    public void adicionarItem(Item item) {
+        itens.add(item);
+        valorTotal += item.preco;
+    }
+
+    public void exibirItens() {
+        System.out.println("Itens na caixa:");
+        for (Item item : itens) {
+            System.out.println("- " + item);
+        }
+        System.out.println("Valor total da caixa: R$ " + valorTotal);
+    }
+}
+
+class LojaQuadrinhos {
+    private static final Map<String, Integer> niveis = new HashMap<>();
+    private static final List<Item> todosItens = new ArrayList<>();
+
+    static {
+        niveis.put("Bronze", 3);
+        niveis.put("Prata", 5);
+        niveis.put("Ouro", 7);
+        niveis.put("Platina", 10);
+
+        todosItens.add(new Item("Quadrinhos", 15.00));
+        todosItens.add(new Item("Chaveiro", 5.00));
+        todosItens.add(new Item("Busto", 10.00));
+        todosItens.add(new Item("Adesivo", 1.00));
+        todosItens.add(new Item("Poster", 25.00));
+        todosItens.add(new Item("Camiseta", 25.00));
+        todosItens.add(new Item("Caneta", 3.00));
+        todosItens.add(new Item("Miniatura", 20.00));
+    }
+
+    public static CaixaAssinatura criarCaixa(String nivelCliente) {
+        CaixaAssinatura caixa = new CaixaAssinatura();
+        int quantidadeItens = niveis.getOrDefault(nivelCliente, 0);
+        Random random = new Random();
+
+        for (int i = 0; i < quantidadeItens; i++) {
+            Item itemAleatorio = todosItens.get(random.nextInt(todosItens.size()));
+            caixa.adicionarItem(itemAleatorio);
+        }
+
+        return caixa;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        String nivelCliente = "Ouro";  // Nível do cliente (Bronze, Prata, Ouro, Platina)
+        CaixaAssinatura caixa = LojaQuadrinhos.criarCaixa(nivelCliente);
+        caixa.exibirItens();
+    }
+}
